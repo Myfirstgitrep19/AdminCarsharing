@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,6 +13,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import api, { API_TYPES } from "../../actions/api";
 import avatar from "assets/img/faces/marc.jpg";
+import Modal from "../../components/Modal/Modal";
 
 const styles = {
   cardCategoryWhite: {
@@ -36,9 +38,13 @@ const useStyles = makeStyles(styles);
 
 export default function UserProfile(props) {
   const classes = useStyles();
-
+  const [open, setOpen] = React.useState(false);
   const [user, setUser] = useState({});
 
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handleChange = (event) => {
     const name = event.target.id;
     setUser({
@@ -62,12 +68,14 @@ export default function UserProfile(props) {
     console.log(user);
     await api.request(API_TYPES.USER).update(user.idUser, user).then(res => {
       setUser(res.data);
+      setOpen(true)
     });
 
   }
 
   return (
     <div>
+      <Modal open={open} onChange={handleClose} txt={'OK'} title={"Aktualizacja danych"}/>
       <GridContainer>
         <GridItem xs={12} sm={12} md={8}>
           <Card>
@@ -80,18 +88,18 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={3}>
                   <CustomInput
                     labelText="Username"
-                    id="userName"
+                    id="UserName"
                     formControlProps={{
                       fullWidth: true,
 
                     }}
                     labelProps={{
-                      shrink: (user.userName) ? true : false,
+                      shrink: (user.UserName) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.userName,
-                      
+                      value: user.UserName,
+
 
                     }}
                   />
@@ -99,16 +107,16 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Email address"
-                    id="email"
+                    id="Email"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.email) ? true : false,
+                      shrink: (user.Email) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.email
+                      value: user.Email
                     }}
 
                   />
@@ -116,16 +124,16 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={5}>
                   <CustomInput
                     labelText="Phone number"
-                    id="phoneNumber"
+                    id="PhoneNumber"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.phoneNumber) ? true : false,
+                      shrink: (user.PhoneNumber) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.phoneNumber,
+                      value: user.PhoneNumber,
                       type: "number"
                     }}
                   />
@@ -135,32 +143,32 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="First Name"
-                    id="firstName"
+                    id="FirstName"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.firstName) ? true : false,
+                      shrink: (user.FirstName) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.firstName
+                      value: user.FirstName
                     }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="Last Name"
-                    id="lastName"
+                    id="LastName"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.lastName) ? true : false,
+                      shrink: (user.LastName) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.lastName
+                      value: user.LastName
                     }}
                   />
                 </GridItem>
@@ -169,32 +177,32 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="City"
-                    id="city"
+                    id="City"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.city) ? true : false,
+                      shrink: (user.City) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.city
+                      value: user.City
                     }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Country"
-                    id="country"
+                    id="Country"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.country) ? true : false,
+                      shrink: (user.Country) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.country,
+                      value: user.Country,
 
                     }}
                     InputLabelProps={{
@@ -205,21 +213,21 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Postal Code"
-                    id="postalCode"
+                    id="PostCode"
                     formControlProps={{
                       fullWidth: true
                     }}
                     labelProps={{
-                      shrink: (user.postalCode) ? true : false,
+                      shrink: (user.PostCode) ? true : false,
                     }}
                     inputProps={{
                       onChange: handleChange,
-                      value: user.postalCode
+                      value: user.PostCode
                     }}
                   />
                 </GridItem>
               </GridContainer>
-
+              <div>{user.Ex}</div>
             </CardBody>
             <CardFooter>
               <Button color="primary" onClick={SendData} >Update Profile</Button>
