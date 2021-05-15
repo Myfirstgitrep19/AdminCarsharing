@@ -36,15 +36,17 @@ import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
-import Car from "views/Car/Car";
+import Car from "views/Car/CarList";
 import SpendingNew from "views/Spending/Spending";
 import CarProfile from "views/Car/Car";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import logList from "views/Logs/logs";
 import SignInSide from "views/SignIn/SignIn";
+import CarList from "views/Car/CarList";
+import CarAvailable from "views/Car/CarAvialable";
 
-localStorage.setItem("role", "user");
-const role = localStorage.getItem("role");
+// localStorage.setItem("role", "admin");
+
 
 const dashboardRoutes = [
   {
@@ -52,26 +54,37 @@ const dashboardRoutes = [
     name: "Dashboard",
     rtlName: "لوحة القيادة",
     icon: Dashboard,
-    component: role == "admin" ? AdminDashboard : UserDashboard,
+    component: AdminDashboard,
     layout: "/admin",
+    role: "Admin",
   },
-  role == "admin"
-    ?  {
-        path: "/Car/:id",
-        name: "Car add-edit",
-        rtlName: "ملف تعريفي للمستخدم",
-        icon: DriveEtaIcon,
-        component: Car,
-        layout: "/admin",
-      }:
-      {
-        path: "/user/:id",
-        name: "User Profile",
-        rtlName: "ملف تعريفي للمستخدم",
-        icon: Person,
-        component: UserProfile,
-        layout: "/admin",
-      },
+  {
+    path: "/dashboard/:id",
+    name: "Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: Dashboard,
+    component: UserDashboard,
+    layout: "/admin",
+    role: "User",
+  },
+  {
+    path: "/CarList/:id",
+    name: "Car List",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: DriveEtaIcon,
+    component: CarList,
+    layout: "/admin",
+    role: "Admin",
+  },
+  {
+    path: "/user/:id",
+    name: "User Profile",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: Person,
+    component: UserProfile,
+    layout: "/admin",
+    role: "User",
+  },
   {
     path: "/Spending/:id",
     name: "Add spending",
@@ -79,6 +92,7 @@ const dashboardRoutes = [
     icon: MonetizationOnIcon,
     component: SpendingNew,
     layout: "/admin",
+    role: "All",
   },
   {
     path: "/table/:id",
@@ -87,24 +101,35 @@ const dashboardRoutes = [
     icon: "content_paste",
     component: TableList,
     layout: "/admin",
+    role: "All",
   },
-  role == "admin"
-    ? {
-        path: "/SignIn/:id",
-        name: "Log In",
-        rtlName: "قائمة الجدول",
-        icon: "content_paste",
-        component: SignInSide,
-        layout: "/admin",
-      }
-    : {
-        path: "/logs/:id",
-        name: "Log List",
-        rtlName: "قائمة الجدول",
-        icon: "content_paste",
-        component: logList,
-        layout: "/admin",
-      },
+  {
+    path: "/Car/:id",
+    name: "Car",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: DriveEtaIcon,
+    component: CarProfile,
+    layout: "/admin",
+    role: "None",
+  },
+  {
+    path: "/logs/:id",
+    name: "Log List",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: logList,
+    layout: "/admin",
+    role: "User",
+  },
+  {
+    path: "/CarAvailable/:id",
+    name: "Available cars",
+    rtlName: "قائمة الجCarAvailableدول",
+    icon: "content_paste",
+    component: CarAvailable,
+    layout: "/admin",
+    role: "User",
+  },
 ];
 
 export default dashboardRoutes;
