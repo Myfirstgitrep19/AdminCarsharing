@@ -34,7 +34,7 @@ import api, { API_TYPES } from "../../actions/api";
 import Cookies from "universal-cookie";
 import { bugs, website, server } from "variables/general.js";
 import Button from "components/CustomButtons/Button.js";
-
+import Modal from "../../components/Modal/Modal";
 import {
   dailySalesChart,
   emailsSubscriptionChart,
@@ -42,15 +42,18 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-
-async function SendData() {}
+import { SettingsPowerRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles(styles);
 
 export default function Dashboard(props) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [carDesc, setData] = useState([{}]);
   const [spendings, setSpendings] = useState([]);
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   let newCars = new Array();
   carDesc.forEach((element) => {
@@ -86,14 +89,12 @@ export default function Dashboard(props) {
   let newDatalabels = new Array();
   let newDataseries = new Array();
 
-  var map = spendings.filter(x => x.costID != 99).reduce(function (map, spending) {
+  var map = spendings.reduce(function (map, spending) {
     var date = spending.date;
     var price = +spending.price;
     map[date] = (map[date] || 0) + price;
     return map;
   }, {});
-
-  // console.log(map)
 
   var array = Object.keys(map).map(function (date) {
     return {
@@ -115,16 +116,25 @@ export default function Dashboard(props) {
     }
   });
 
-  // console.log(newDatalabels);
-  // console.log(newDataseries);
-
   emailsSubscriptionChart.data.labels = newDatalabels;
   emailsSubscriptionChart.data.series = [newDataseries];
 
-  const cookies = new Cookies();
   let userId = props.match.params.id;
-  //cookies.get("userId");
-  // console.log(userId);
+
+  async function SendData() {
+    const emailAddress = localStorage.getItem("user");
+    let email = {
+      From: "CarsharingN3PAM@gmail.com",
+      To: emailAddress,
+      Subject: `Wydatki użytkownika ${emailAddress}`,
+      Html: "",
+      IdUser: userId,
+    };
+
+    await api.request(API_TYPES.SPENDINGS).sendEmail(email);
+    setOpen(true);
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,7 +147,6 @@ export default function Dashboard(props) {
 
       setData(request.data);
       setSpendings(userSpendings.data);
-      console.log(userSpendings.data);
     };
 
     fetchData();
@@ -147,42 +156,19 @@ export default function Dashboard(props) {
   return (
     <div>
       <GridContainer>
-        {/* <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>local_taxi</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Ilość samochodów</p>
-              <h3 className={classes.cardTitle}>
-                49/50 <small>aut</small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Sprawdź dostępne auta
-                </a>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
         <GridItem xs={12} sm={6} md={6}>
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
                 <Icon>payments</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Wydatki Admin</p>
+              <p className={classes.cardCategory}>Wydatki User</p>
               <h3 className={classes.cardTitle}>{sumValues} PLN</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <DateRange />
-                AdminTwoje wydatki 
+                Twoje wydatki
               </div>
             </CardFooter>
           </Card>
@@ -204,52 +190,6 @@ export default function Dashboard(props) {
             </CardFooter>
           </Card>
         </GridItem>
-        {/* <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
-              </CardIcon>
-              <p className={classes.cardCategory}>Klienci</p>
-              <h3 className={classes.cardTitle}>245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                Właśnie zaktualizowano
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
-      </GridContainer>
-      <GridContainer>
-        {/* <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Auta w użyciu</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                wzrost.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> Zaktualizowano 2 minuty temu
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
         <GridItem xs={12} sm={12} md={12}>
           <Card chart>
             <CardHeader color="warning">
@@ -301,71 +241,6 @@ export default function Dashboard(props) {
             </CardFooter>
           </Card>
         </GridItem>
-        {/* <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Długość czasu wypożyczenia aut</h4>
-              <p className={classes.cardCategory}>Sumaryczny czas wypożyczenia aut</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> Zaktualizowano 2 minuty temu
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem> */}
-      </GridContainer>
-      <GridContainer>
-        {/* <GridItem xs={12} sm={12} md={6}>
-          <CustomTabs
-            title="Tasks:"
-            headerColor="primary"
-            tabs={[
-              {
-                tabName: "Bugs",
-                tabIcon: BugReport,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
-                  />
-                )
-              },
-              {
-                tabName: "Website",
-                tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                )
-              },
-              {
-                tabName: "Server",
-                tabIcon: Cloud,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
-                  />
-                )
-              }
-            ]}
-          />
-        </GridItem> */}
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="success">
@@ -382,6 +257,12 @@ export default function Dashboard(props) {
           </Card>
         </GridItem>
       </GridContainer>
+      <Modal
+        open={open}
+        onChange={handleClose}
+        txt={"OK"}
+        title={"Koszty Wysłane"}
+      />
     </div>
   );
 }

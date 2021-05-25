@@ -56,16 +56,7 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: AdminDashboard,
     layout: "/admin",
-    role: "Admin",
-  },
-  {
-    path: "/dashboard/:id",
-    name: "Dashboard",
-    rtlName: "لوحة القيادة",
-    icon: Dashboard,
-    component: UserDashboard,
-    layout: "/admin",
-    role: "User",
+    role: "All",
   },
   {
     path: "/CarList/:id",
@@ -128,7 +119,7 @@ const dashboardRoutes = [
     icon: "content_paste",
     component: CarAvailable,
     layout: "/admin",
-    role: "User",
+    role: "All",
   },
 ];
 
