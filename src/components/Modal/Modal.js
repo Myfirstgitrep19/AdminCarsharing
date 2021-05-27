@@ -13,14 +13,6 @@ export default function ResponsiveDialog(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
   return (
     <div>
       <Dialog
@@ -37,9 +29,6 @@ export default function ResponsiveDialog(props) {
         </DialogContent>
         <DialogActions>
           {props.option}
-          {/* <Button autoFocus onClick={props.onChange} color="primary">
-            Disagree
-          </Button> */}
           <Button onClick={props.onChange} color="primary" autoFocus>
             OK
           </Button>
