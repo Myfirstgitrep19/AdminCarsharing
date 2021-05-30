@@ -68,7 +68,7 @@ export default function SignInSide(props) {
     return email.length > 0 && password.length > 0;
   }
 
-  async function handleSubmit(event,) {
+  async function handleSubmit(event) {
     event.preventDefault();
     user = {
       Email: email,
